@@ -7,7 +7,7 @@
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
 # Short-Description: Runs boothy
-# Description:       Runs boothy photo booth application on Raspberry Pi 2.
+# Description:       Runs boothy photo booth application on Raspberry Pi 3.
 ### END INIT INFO
 #
 # NOTE: sudo update-rc.d boothyStart.sh defaults (will add this to startup script)
