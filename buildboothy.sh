@@ -17,8 +17,8 @@ rm -rf $SRC_DIR
 echo "Creating source directory"
 mkdir $SRC_DIR
 
-echo "Retrieving latest repo: git clone https://github.com/zoroloco/boothy.git " $SRC_DIR
-git clone https://github.com/zoroloco/boothy.git $SRC_DIR
+echo "Retrieving latest repo: git clone https://github.com/JGutier/boothy.git " $SRC_DIR
+git clone https://github.com/JGutier/boothy.git $SRC_DIR
 
 echo "Making run file executable."
 chmod +x $SRC_DIR/run.sh
