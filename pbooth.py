@@ -22,15 +22,14 @@ IMG1             = "1.jpg"
 IMG2             = "2.jpg"
 IMG3             = "3.jpg"
 CurrentWorkingDir= "/usr/local/src/boothy"
-IMG4             = "4logo.png"
+IMG4             = "4logoJG.png"
 logDir           = "logs"
 archiveDir       = "photos"
 SCREEN_WIDTH     = 640
 SCREEN_HEIGHT    = 480
 IMAGE_WIDTH      = 640
 IMAGE_HEIGHT     = 480
-BUTTON_PIN       = 26
-LED_PIN          = 19 #connected to external 12v.
+BUTTON_PIN       = 16
 PHOTO_DELAY      = 8
 overlay_renderer = None
 buttonEvent      = False
@@ -38,7 +37,6 @@ buttonEvent      = False
 #setup GPIOs
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(BUTTON_PIN, GPIO.IN, pull_up_down=GPIO.PUD_UP)
-GPIO.setup(LED_PIN, GPIO.OUT)
 
 #print the image
 def printPic(fileName):
@@ -187,13 +185,13 @@ def initLogger(output_dir):
     logger.addHandler(handler)
 
 def onButtonPress():
-    logging.info("Big red button pressed!")
+    logging.info("Yellow button pressed!")
     play()
     #reset the initial welcome message
-    addPreviewOverlay(20,200,55,"Press red button to begin!")
+    addPreviewOverlay(20,200,55,"Press Yellow Button to begin!")
 
 def onButtonDePress():
-    logging.info("Big red button de-pressed!")
+    logging.info("Yellow button de-pressed!")
 
 #start flow
 with picamera.PiCamera() as camera:
@@ -205,7 +203,7 @@ with picamera.PiCamera() as camera:
         GPIO.output(LED_PIN,GPIO.LOW)
         logging.info("Starting preview")
         camera.start_preview()
-        addPreviewOverlay(20,200,55,"Press red button to begin!")
+        addPreviewOverlay(20,200,55,"Press Yellow to begin!")
 
         logging.info("Starting application loop")
         while True:
