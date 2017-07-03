@@ -1,9 +1,10 @@
 # boothy - Photobooth application for Raspberry Pi
-# developed by Kenneth Centurion
+# developed by Kenneth Centurion April 2017
+# Modified by Josue Gutierrez July 2017
 #
 # This application will take 3 images with PHOTO_DELAY seconds between.
 # Will have text overlay on the screen with a countdown.  Will then merge
-# the 3 images with a template fourth image "4logo.png" in a grid. The final
+# the 3 images with a template fourth image "4logoJG.png" in a grid. The final
 # image is then sent to the printer using the CUPs API.
 
 import picamera
@@ -25,12 +26,13 @@ CurrentWorkingDir= "/usr/local/src/boothy"
 IMG4             = "4logoJG.png"
 logDir           = "logs"
 archiveDir       = "photos"
-SCREEN_WIDTH     = 640
+#Using RPi 7" Touchscreen
+SCREEN_WIDTH     = 800
 SCREEN_HEIGHT    = 480
-IMAGE_WIDTH      = 640
-IMAGE_HEIGHT     = 480
+IMAGE_WIDTH      = 1280
+IMAGE_HEIGHT     = 960
 BUTTON_PIN       = 16
-PHOTO_DELAY      = 8
+PHOTO_DELAY      = 5
 overlay_renderer = None
 buttonEvent      = False
 
@@ -102,9 +104,18 @@ def addPreviewOverlay(xcoord,ycoord,fontSize,overlayText):
         overlay_renderer = camera.add_overlay(img.tostring(),
                                               layer=3,
                                               size=img.size,
-                                              alpha=128);
+                                              alpha=170);
+        #change alpha from 0-255 (Bold) for transparency
     else:
         overlay_renderer.update(img.tostring())
+        
+#This is to show the image that will be printed    
+#Using Pillow 2.7
+
+def showMergedImg(fileName)
+    from PIL import Image
+    img = Image.open('fileName.jpg')
+    img.show()
 
 #run a full series
 def play():
@@ -112,9 +123,6 @@ def play():
 
     fileName = time.strftime("%Y%m%d-%H%M%S")+".jpg"
     print "Created filename: "+fileName
-
-    #turn on flash
-    GPIO.output(LED_PIN,GPIO.HIGH)
 
     countdownFrom(PHOTO_DELAY)
     captureImage(IMG1)
@@ -128,11 +136,11 @@ def play():
     captureImage(IMG3)
     time.sleep(1)
 
-    #turn off flash
-    GPIO.output(LED_PIN,GPIO.LOW)
-
     convertMergeImages(fileName)
     time.sleep(1)
+    
+    showMergedImg(fileName)
+    time.sleep(3)
 
     printPic(fileName)
     time.sleep(15)
@@ -143,7 +151,7 @@ def play():
 def initCamera(camera):
     logging.info("Initializing camera.")
     #camera settings
-    camera.resolution            = (SCREEN_WIDTH, SCREEN_HEIGHT)
+    camera.resolution            = (SCREEN_WIDTH*4, SCREEN_HEIGHT*4)
     camera.framerate             = 24
     camera.sharpness             = 0
     camera.contrast              = 0
@@ -159,7 +167,8 @@ def initCamera(camera):
     camera.color_effects         = None
     camera.rotation              = 0
     camera.hflip                 = False
-    camera.vflip                 = True
+    camera.vflip                 = False
+    #Change vlfip if image is inverted
     camera.crop                  = (0.0, 0.0, 1.0, 1.0)
 
 def initLogger(output_dir):
@@ -185,13 +194,13 @@ def initLogger(output_dir):
     logger.addHandler(handler)
 
 def onButtonPress():
-    logging.info("Yellow button pressed!")
+    logging.info("Red button pressed!")
     play()
     #reset the initial welcome message
-    addPreviewOverlay(20,200,55,"Press Yellow Button to begin!")
+    addPreviewOverlay(20,200,55,"Press Red Button to begin!")
 
 def onButtonDePress():
-    logging.info("Yellow button de-pressed!")
+    logging.info("Red button de-pressed!")
 
 #start flow
 with picamera.PiCamera() as camera:
@@ -203,7 +212,7 @@ with picamera.PiCamera() as camera:
         GPIO.output(LED_PIN,GPIO.LOW)
         logging.info("Starting preview")
         camera.start_preview()
-        addPreviewOverlay(20,200,55,"Press Yellow to begin!")
+        addPreviewOverlay(20,200,55,"Press Red to begin!")
 
         logging.info("Starting application loop")
         while True:
